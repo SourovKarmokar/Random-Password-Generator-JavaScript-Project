@@ -129,5 +129,47 @@ generateBtn.addEventListener("click", () => {
   generatedPassword = true;
 
   resultEl.innerText = generatePassword(length, hasLower, hasUpper, hasNumber, hasSymbol);
-  copiedInfo.style.transform =""
+
+  copyInfo.style.transform = "translateY(0%)";
+  copyInfo.style.opacity = "0.75";
+  copiedInfo.style.transform = "translateY(200%)";
+  copiedInfo.style.opacity = "0";
+  
+  function generatePassword(length, lower, upper, number, symbol) {
+      let generatedPassword = "";
+      const typesCount = lower + upper + number + symbol;
+      const typesArr = [{ lower }, { upper }, { number }, { symbol }]
+          .filter(item => Object.values(item)[0]);
+  
+      if (typesCount === 0) {
+          return "";
+      }
+  
+      for (let i = 0; i < length; i++) {
+          typesArr.forEach(type => {
+              const funcName = Object.keys(type)[0];
+              generatedPassword += randomFunc[funcName]();
+          });
+      }
+  
+      return generatedPassword.slice(0, length).split('').sort(() => Math.random() - 0.5).join('');
+  };
+  
+  function disableOnlyCheckbox() {
+    let totalChecked = [uppercaseE1, lowercaseE1, numberE1, symbolE1]
+        .filter(el => el.checked);
+
+    totalChecked.forEach(el => {
+        if (totalChecked.length === 1) {
+            el.disabled = true;
+        } else {
+            el.disabled = false;
+        }
+    });
+}
+
+[uppercaseE1, lowercaseE1, numberE1, symbolE1].forEach(el => {
+    el.addEventListener("click", () => {
+        disableOnlyCheckbox();
+    });
 });
